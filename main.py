@@ -1,9 +1,13 @@
 import pandas as pd
 import numpy as np
-pays = ["Serbia", "Bulgaria", "Macedonia", "Romania", "Greece", "Montenegro","Albania", "B&H", "Croatia", "Slovenia"]
+pays = ["Serbia", "Bulgaria", "Macedonia", "Romania", "Greece", "Montenegro","Albania", "Bosnia and Herzegovina", "Croatia", "Slovenia"]
 critere = ["C1", "C2", "C3", "C4", "C5", "C6", "C7", "C8", "C9", "C10", "C11", "C12", "C13", "C14", "C15", "C16", "C17", "C18", "C19", "C20"]
 donnees = pd.read_csv("donnees.csv", header=None)
 poids = pd.read_csv("poids.csv", header=None)
+
+# Changement de poids pour que le total soit égale à 1
+poids.iloc[0, 4] = 0.08
+print(poids)
 
 matrice_promethee = np.zeros((len(pays), len(pays)))
 matrice_electre = np.zeros((len(pays), len(pays))) 
@@ -25,6 +29,7 @@ matrice = pd.DataFrame(matrice_promethee, index=pays, columns=pays)
 matrice.to_csv("matrice_promethee.csv", sep=';', decimal=',', float_format='%.2f')
 matrice = pd.DataFrame(matrice_electre, index=pays, columns=pays)
 matrice.to_csv("matrice_electre.csv", sep=';', decimal=',', float_format='%.2f')
+poids.to_csv("poids_fr.csv", sep=';', decimal=',', float_format='%.2f')
 
 fplus_data = matrice_promethee.sum(axis=1)
 fplus = pd.DataFrame({"Country": pays, "fplus": fplus_data})

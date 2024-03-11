@@ -37,8 +37,8 @@ for i_first in range(len(pays)):
             if donnees.iloc[j, i_first] >= donnees.iloc[j, i_second]:
                 score_electre_preference += poids[j]
                 score_electre += poids[j]
-            elif donnees.iloc[j, i_first] > donnees.iloc[j, i_second]-seuil_preference:
-                score_electre_preference += poids[j]*(1-((donnees.iloc[j, i_first]-donnees.iloc[j, i_second])/seuil_preference))
+            elif donnees.iloc[j, i_second] - donnees.iloc[j, i_first] < seuil_preference:
+                score_electre_preference += poids[j]*(1-((donnees.iloc[j, i_second]-donnees.iloc[j, i_first])/seuil_preference))
                 
             
         matrice_promethee [i_first][i_second] = score_promethee

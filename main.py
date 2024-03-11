@@ -35,11 +35,11 @@ for i_first in range(len(pays)):
             
             #electre
             if donnees.iloc[j, i_first] >= donnees.iloc[j, i_second]:
-                if donnees.iloc[j, i_first] > donnees.iloc[j, i_second]+seuil_preference:
-                    score_electre_preference += poids[j]
-                else:
-                    score_electre_preference += poids[j]*(1-((donnees.iloc[j, i_first]-donnees.iloc[j, i_second])/seuil_preference))
+                score_electre_preference += poids[j]
                 score_electre += poids[j]
+            elif donnees.iloc[j, i_first] > donnees.iloc[j, i_second]-seuil_preference:
+                score_electre_preference += poids[j]*(1-((donnees.iloc[j, i_first]-donnees.iloc[j, i_second])/seuil_preference))
+                
             
         matrice_promethee [i_first][i_second] = score_promethee
         matrice_electre[i_first][i_second] = score_electre
@@ -49,30 +49,30 @@ for i_first in range(len(pays)):
 matrice = pd.DataFrame(matrice_promethee, index=pays, columns=pays)
 matrice.to_csv("generatedData/matrice_promethee.csv", sep=';', decimal=',', float_format='%.2f')
 matrice = pd.DataFrame(matrice_electre, index=pays, columns=pays)
-matrice.to_csv("generatedData/matrice_electre.csv", sep=';', decimal=',', float_format='%.2f')
+matrice.to_csv("generatedData/matrice_electre_vi.csv", sep=';', decimal=',', float_format='%.2f')
 matrice = pd.DataFrame(matrice_promethee_preference, index=pays, columns=pays)
-matrice.to_csv("generatedData/matrice_promethee_preference.csv", sep=';', decimal=',', float_format='%.2f')
+matrice.to_csv("generatedData/matrice_promethee_preference.csv", sep=';', decimal=',', float_format='%.3f')
 matrice = pd.DataFrame(matrice_electre_preference, index=pays, columns=pays)
-matrice.to_csv("generatedData/matrice_electre_preference.csv", sep=';', decimal=',', float_format='%.2f')
+matrice.to_csv("generatedData/matrice_electre_is.csv", sep=';', decimal=',', float_format='%.3f')
 
 #Calcul des flux
 # Calcul flux positifs Φ+
 fplus_data = matrice_promethee.sum(axis=1)
 fplus = pd.DataFrame({"Country": pays, "fplus": fplus_data})
 fplus = fplus.sort_values(by='fplus', ascending=False)
-fplus.to_csv("generatedData/fplus.csv", sep=';', decimal=',', float_format='%.2f')
+fplus.to_csv("generatedData/fplus.csv", sep=';', decimal=',', float_format='%.3f')
 
 # Calcul flux négatifs Φ-
 fmoins_data = matrice_promethee.sum(axis=0)
 fmoins = pd.DataFrame({"Country": pays, "fmoins": fmoins_data})
 fmoins = fmoins.sort_values(by='fmoins', ascending=True)
-fmoins.to_csv("generatedData/fmoins.csv", sep=';', decimal=',', float_format='%.2f')
+fmoins.to_csv("generatedData/fmoins.csv", sep=';', decimal=',', float_format='%.3f')
 
 # Calcul flux net
 fnet_data = fplus_data - fmoins_data
 fnet = pd.DataFrame({"Country": pays, "fnet": fnet_data})
 fnet = fnet.sort_values(by='fnet', ascending=False)
-fnet.to_csv("generatedData/fnet.csv", sep=';', decimal=',', float_format='%.2f')
+fnet.to_csv("generatedData/fnet.csv", sep=';', decimal=',', float_format='%.3f')
 
 
 #Calcul des flux preference
@@ -80,23 +80,16 @@ fnet.to_csv("generatedData/fnet.csv", sep=';', decimal=',', float_format='%.2f')
 fplus_data_preference = matrice_promethee_preference.sum(axis=1)
 fplus_preference = pd.DataFrame({"Country": pays, "fplus": fplus_data_preference})
 fplus_preference = fplus_preference.sort_values(by='fplus', ascending=False)
-fplus_preference.to_csv("generatedData/fplus_preference.csv", sep=';', decimal=',', float_format='%.2f')
+fplus_preference.to_csv("generatedData/fplus_preference.csv", sep=';', decimal=',', float_format='%.3f')
 
 # Calcul flux négatifs preference Φ-
 fmoins_data_preference = matrice_promethee.sum(axis=0)
 fmoins_preference = pd.DataFrame({"Country": pays, "fmoins": fmoins_data_preference})
 fmoins_preference = fmoins_preference.sort_values(by='fmoins', ascending=True)
-fmoins_preference.to_csv("generatedData/fmoins_preference.csv", sep=';', decimal=',', float_format='%.2f')
+fmoins_preference.to_csv("generatedData/fmoins_preference.csv", sep=';', decimal=',', float_format='%.3f')
 
 # Calcul flux net preference
 fnet_data_preference = fplus_data_preference - fmoins_data_preference
 fnet_preference = pd.DataFrame({"Country": pays, "fnet": fnet_data_preference})
 fnet_preference = fnet_preference.sort_values(by='fnet', ascending=False)
-fnet_preference.to_csv("generatedData/fnet_preference.csv", sep=';', decimal=',', float_format='%.2f')
-
-print(fplus)
-print(fmoins)
-print(fnet)
-print(fplus_preference)
-print(fmoins_preference)
-print(fnet_preference)
+fnet_preference.to_csv("generatedData/fnet_preference.csv", sep=';', decimal=',', float_format='%.3f')

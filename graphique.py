@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import networkx as nx
 import sys
 
-electre = pd.read_csv("generatedData/matrice_electre_vi.csv", sep=';', decimal=',')
+electre = pd.read_csv("generatedData/matrice_electre_is.csv", sep=';', decimal=',')
 electre = electre.set_index(electre.columns[0]).rename_axis('Country')
 G = nx.DiGraph()
 pays = ["Serbia", "Bulgaria", "Macedonia", "Romania", "Greece", "Montenegro","Albania", "Bosnia", "Croatia", "Slovenia"]
